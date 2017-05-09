@@ -4,8 +4,8 @@ from urllib.request import urlopen
 from pathlib import Path
 from filecmp import cmp
 from json import loads, dumps
-from os import rename
-from shutil import copyfile
+from os import rename, makedirs
+from shutil import copy
 from sys import argv
 from subprocess import run, PIPE
 
@@ -29,6 +29,9 @@ with open('packages.txt') as packages:
         json = page.read()
         print('@ Downloaded new API spec, "{}" bytes'.format(len(json)))
 
+        if not Path('apis').is_dir():
+            makedirs('apis')
+
         oldfile = 'apis/{}-{}-{}.json'.format(url, api, ver)
         newfile = 'apis/{}-{}-{}.json.new'.format(url, api, ver)
         if not Path(oldfile).is_file():
@@ -47,7 +50,8 @@ with open('packages.txt') as packages:
             print('@ No changes ...')
             continue
 
-        rename(newfile, oldfile)
+        if name == newfile:
+            rename(newfile, oldfile)
         print('@ Updating metadata for "{}"'.format(api))
         with open(oldfile) as io:
             buffer = loads(io.read())
@@ -61,7 +65,6 @@ with open('packages.txt') as packages:
         run([
             'pwd'
         ])
-        run(['rm', '../ras-rapos/{}/requirements.txt'.format(rep)])
         status = run([
             "java", "-jar", "/usr/local/bin/swagger-codegen-cli.jar", "generate",
             "-i", "apis/config.json",
@@ -71,19 +74,22 @@ with open('packages.txt') as packages:
         if status.returncode:
             print('%% code generation FAILED!')
             exit(status.returncode)
+
         target = '../ras-repos/{}/'.format(rep)
-        copyfile('templates/__main__.py', rep)
-        copyfile('templates/Procfile', rep)
-        copyfile('templates/run.sh', rep)
+        copy('templates/__main__.py', target + 'swagger_server/__main__.py')
+        copy('templates/Procfile', target + 'Procfile')
+        copy('templates/run.sh', target + 'run.sh')
 
         def ensure_line(filename, test):
-            test = test.split('=')[0]
             with open(filename) as inp:
                 text = inp.read()
-            if ('\n' + test + '=') not in text:
+            if test not in text:
                 with open(filename, 'a') as out:
-                    out.write(line + '\n')
+                    out.write(test)
 
         with open('templates/requirements.txt') as io:
-            for line in io.readline():
-                ensure_line('../ras-rapos/{}/requirements.txt'.format(rep), line)
+            while True:
+                line = io.readline()
+                if not line:
+                    break
+                ensure_line('../ras-repos/{}/requirements.txt'.format(rep), line)

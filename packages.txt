@@ -1,0 +1,2 @@
+# API | VERSION | REPO | URL | HOST
+party-api 1.0.1 ras-party-demo sdcplatform localhost

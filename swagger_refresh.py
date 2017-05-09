@@ -75,3 +75,15 @@ with open('packages.txt') as packages:
         copyfile('templates/__main__.py', rep)
         copyfile('templates/Procfile', rep)
         copyfile('templates/run.sh', rep)
+
+        def ensure_line(filename, test):
+            test = test.split('=')[0]
+            with open(filename) as inp:
+                text = inp.read()
+            if ('\n' + test + '=') not in text:
+                with open(filename, 'a') as out:
+                    out.write(line + '\n')
+
+        with open('templates/requirements.txt') as io:
+            for line in io.readline():
+                ensure_line('../ras-rapos/{}/requirements.txt'.format(rep), line)

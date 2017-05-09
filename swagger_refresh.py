@@ -24,6 +24,7 @@ with open('packages.txt') as packages:
             continue
 
         api, ver, rep, url, host = parts
+        print("Repo+", rep)
         print('@ Regenerating "{}"'.format(api))
         page = urlopen('https://api.swaggerhub.com/apis/{}/{}/{}'.format(url, api, ver))
         json = page.read()

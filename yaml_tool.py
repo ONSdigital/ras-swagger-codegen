@@ -122,7 +122,10 @@ class YAML_API(object):
                             except FileNotFoundError:
                                 pass
                             beg = text.index('def {}('.format(fn))
-                            end = text.index('\ndef ', beg)
+                            try:
+                                end = text.index('\ndef ', beg)
+                            except ValueError:
+                                end = len(text)
                             snippet = text[beg:end-1]
                             pathname = LOCAL.format(self.repo, controller)
                             with open(pathname, 'a') as dst:

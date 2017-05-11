@@ -80,6 +80,7 @@ with open('packages.txt') as packages:
         copy('templates/__main__.py', target + 'swagger_server/__main__.py')
         copy('templates/Procfile', target + 'Procfile')
         copy('templates/run.sh', target + 'run.sh')
+        copy('templates/runtime.txt', target + 'runtime.txt')
 
         def ensure_line(filename, test):
             with open(filename) as inp:

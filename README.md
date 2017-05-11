@@ -1,8 +1,10 @@
 # RAS-Swagger-Codegen
 
-This is an experimental services aimed at automatically generating Microservice boilerplate code directly from the swagger API service. Please do not attempt to use this just for the moment, however in principle this is how it's supposed to work.
+This is an experimental services aimed at automatically generating Microservice boilerplate code directly from the swagger API service.
+It's now is a usable state but be warned it's still a little short on documentation and error checking.
 
-After checking out the repository, create another folder at the same level in your directory tree called 'ras-repos', this is where the auto-generated code will be created.
+After checking out the repository, create another folder at the same level in your directory tree called 'ras-repos',
+this is where the auto-generated code will be created.
 
 ###
 
@@ -12,15 +14,16 @@ After checking out the repository, create another folder at the same level in yo
 
 This will iterrogate the **packages.txt** file to recover the list of API's were going to manage. When you create a new API the first thing you will need to do is to add an entry to this file. For now the format is very simple, one line per API in the following format;
 
-api-name - this is the name of the API defined in swagger
-version  - this is the version of the API we're working with
-repo     - this is the name of the GitHub repository we are targetting
-url      - is the prefix (username) we're aiming for in swagger
-hostname - is the name of the host we're want to test against
+* api-name - this is the name of the API defined in swagger
+* version  - this is the version of the API we're working with
+* repo     - this is the name of the GitHub repository we are targetting
+* url      - is the prefix (username) we're aiming for in swagger
+* hostname - is the name of the host we're want to test against
 
-Please see the demo entry for a live example. [this is likely to change]
+Please see the demo entry for a live example.
 
-After running the script, you should find a working file-tree in ../ras-repos/(**repo**) and you should be able to use the **yaml_tool** script to configure your local customisations / logic.
+After running the script, you should find a working file-tree in ../ras-repos/(**repo**) and you should be able to
+use the **yaml_tool** script to configure your local customisations / logic.
 
 ```bash
 ./yaml_tool.py (repo) [(cmd) [(options)]]
@@ -59,3 +62,55 @@ When you have an initial repository ready to go, create a new repository on GitH
 ```bash
 ./git_push.sh ONSdigital (repo) "Initial commit"
 ```
+
+## Examples
+
+##### See what's been implemented so far ...
+
+```bash
+$ ./yaml_tool.py ras-collection-instrument-demo list
+[X] get_collection_instrument_by_id :: /collectioninstrument/id/{id}
+[X] static_typ_uri_get :: /static/{typ}/{uri}
+[X] define_batch_survey_ce_count_post :: /define_batch/{survey}/{ce}/{count}
+[X] surveys_get :: /surveys
+[X] upload_survey_ce_post :: /upload/{survey}/{ce}
+[X] activate_survey_ce_post :: /activate/{survey}/{ce}
+[X] download_csv_get :: /download_csv
+[X] clear_batch_survey_ce_post :: /clear_batch/{survey}/{ce}
+[X] status_survey_ce_get :: /status/{survey}/{ce}
+[ ] collectioninstrument_get :: /collectioninstrument
+[ ] collectioninstrument_id_id_options :: /collectioninstrument/id/{id}
+[ ] collectioninstrument_get :: /collectioninstrument
+[ ] collectioninstrument_post :: /collectioninstrument
+[ ] get_collection_instrument_by_id :: /collectioninstrument/id/{id}
+[ ] collectioninstrument_id_id_options :: /collectioninstrument/id/{id}
+[ ] collectioninstrument_id_id_put :: /collectioninstrument/id/{id}
+```
+
+##### Implement a new routine ...
+```bash
+$ ./yaml_tool.py ras-collection-instrument-demo implement get_collection_instrument_by_id
+```
+
+##### See how much we've done ...
+```bash
+$ ./yaml_tool.py ras-collection-instrument-demo status
+Total of "16" endpoints, "9" implemented "56"%
+```
+
+##### Explicitly update the routing table ...
+```bash
+$ ./yaml_tool.py ras-collection-instrument-demo route
+```
+##### Where's my stuff?!
+
+In the generated code;
+
+* swagger_server/controllers_local - your code goes here
+* swagger_server/tests_local - your tests go here
+
+In swagger-codegen;
+
+* templates - ONS specific changes to the default generated code go here
+
+To Force a rebuild on all your repo's, remove the contents of the /apis folder.

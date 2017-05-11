@@ -157,8 +157,9 @@ class YAML_API(object):
         for fn, pth in unimplemented:
             print('[ ] {} :: {}'.format(fn, pth))
 
-    def update_route(self, path, method, tag):
-        router = 'swagger_server.controllers_local.{}_controller'.format(tag)
+    def update_route(self, path, method, tag, state):
+        local = '_local' if state else ''
+        router = 'swagger_server.controllers{}.{}_controller'.format(local, tag)
         self.conf['paths'][path][method]['x-swagger-router-controller'] = router
 
     def route(self):
@@ -170,9 +171,8 @@ class YAML_API(object):
             else:
                 text = ''
             for fn, pth, method, tag in self.controllers[controller]:
-                if ('\ndef '+fn+'(') not in text:
-                    continue
-                self.update_route(pth, method, tag)
+                state = ('\ndef '+fn+'(') in text
+                self.update_route(pth, method, tag, state)
         self.save()
 
 if len(argv) < 2:

@@ -175,36 +175,37 @@ class YAML_API(object):
                 self.update_route(pth, method, tag, state)
         self.save()
 
-if len(argv) < 2:
-    usage('insufficient parameters')
+if __name__ == '__main__':
+    if len(argv) < 2:
+        usage('insufficient parameters')
 
-api = YAML_API()
-api.open(argv[1])
-api.load_tags()
-api.load_controllers()
+    api = YAML_API()
+    api.open(argv[1])
+    api.load_tags()
+    api.load_controllers()
 
-if len(argv) == 2:
-    api.check_codegen()
+    if len(argv) == 2:
+        api.check_codegen()
+        exit(0)
+
+    if argv[2] == 'status':
+        api.status()
+        exit(0)
+
+    if argv[2] == 'route':
+        api.route()
+        exit(0)
+
+    if argv[2] == 'list':
+        api.list()
+        exit(0)
+
+    if len(argv) < 4:
+        usage('insufficient parameters')
+
+    if argv[2] == 'implement':
+        api.implement(argv[3])
+        exit(0)
+
+    usage('unrecognised option')
     exit(0)
-
-if argv[2] == 'status':
-    api.status()
-    exit(0)
-
-if argv[2] == 'route':
-    api.route()
-    exit(0)
-
-if argv[2] == 'list':
-    api.list()
-    exit(0)
-
-if len(argv) < 4:
-    usage('insufficient parameters')
-
-if argv[2] == 'implement':
-    api.implement(argv[3])
-    exit(0)
-
-usage('unrecognised option')
-exit(0)

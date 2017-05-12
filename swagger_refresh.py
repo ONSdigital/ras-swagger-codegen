@@ -8,6 +8,7 @@ from os import rename, makedirs
 from shutil import copy
 from sys import argv
 from subprocess import run, PIPE
+from yaml_tool import YAML_API
 
 force = '-f' in argv
 
@@ -95,3 +96,10 @@ with open('packages.txt') as packages:
                 if not line:
                     break
                 ensure_line('../ras-repos/{}/requirements.txt'.format(rep), line)
+
+        print('* Running YAML router for "{}"'.format(rep))
+        api = YAML_API()
+        api.open(rep)
+        api.load_tags()
+        api.load_controllers()
+        api.route()

@@ -4,6 +4,7 @@ from connexion import App
 from .encoder import JSONEncoder
 from os import getenv, getcwd
 from pathlib import Path
+from flask_cors import CORS, cross_origin
 
 if __name__ == '__main__':
     cf_app_env = getenv('VCAP_APPLICATION')
@@ -20,6 +21,7 @@ if __name__ == '__main__':
                 io.write(yaml.dump(code))
 
     app = App(__name__, specification_dir='./swagger/')
+    CORS(app.app)
     app.app.json_encoder = JSONEncoder
     app.add_api('swagger.yaml', arguments={'title': 'ONS Microservice'})
     app.run(host='0.0.0.0', port=getenv('PORT', 8080))

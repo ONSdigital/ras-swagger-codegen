@@ -1,12 +1,16 @@
 # RAS-Swagger-Codegen
 
-This is an experimental services aimed at automatically generating Microservice boilerplate code directly from the swagger API service.
-It's now is a usable state but be warned it's still a little short on documentation and error checking.
+This is an experimental services aimed at automatically generating Microservice boilerplate code directly from the swagger API service. It's now is a usable state but be warned it's still a little short on documentation and error checking.
 
-After checking out the repository, create another folder at the same level in your directory tree called 'ras-repos',
-this is where the auto-generated code will be created.
+Switch to the [GitHub Pages version of this page.](https://onsdigital.github.io/ras-swagger-codegen/)
 
-###
+### Dependencies
+
+In order to use this repository you will need to install Java on your machine and the [swagger-codegen](https://github.com/swagger-api/swagger-codegen) application. Please follow the link for details about how to do this.
+
+After checking out the repository, create another folder at the same level in your directory tree called 'ras-repos', this is where the auto-generated code will be created.
+
+#### Synchronise Swagger API with Codebase
 
 ```bash
 ./swagger_refresh.py

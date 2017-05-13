@@ -1,0 +1,14 @@
+language: python
+python:
+  - "3.5"
+env:
+  - CODECOV_TOKEN="6991b6d9-6c74-4566-a734-174042ef0759"
+install:
+  - pip install -r requirements.txt
+script:
+  - pytest --cov=swagger_server/controllers_local
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+notifications:
+    slack: surveydatacollection:LCbNJJpDoY3gYIvLOlK0nZkV
+

@@ -64,9 +64,9 @@ with open('packages.txt') as packages:
             io.write(dumps(buffer))
 
         print('@ Running code generator for "{}"'.format(api))
-        run([
-            'pwd'
-        ])
+        run(['rm', '-rf', '../ras-repos/{}/swagger_server/test'.format(rep)])
+        run(['rm', '-rf',  '../ras-repos/{}/swagger_server/controllers'.format(rep)])
+        run(['rm', '../ras-repos/{}/git_push.sh'.format(rep)])
         status = run([
             "java", "-jar", "/usr/local/bin/swagger-codegen-cli.jar", "generate",
             "-i", "apis/config.json",
@@ -78,12 +78,23 @@ with open('packages.txt') as packages:
             exit(status.returncode)
 
         target = '../ras-repos/{}/'.format(rep)
-        copy('templates/__main__.py', target + 'swagger_server/__main__.py')
-        copy('templates/Procfile', target + 'Procfile')
-        copy('templates/run.sh', target + 'run.sh')
-        copy('templates/test.sh', target + 'test.sh')
-        copy('templates/runtime.txt', target + 'runtime.txt')
-        copy('templates/.travis.yml', target + '.travis.yml')
+        files = [
+            ['__main__.py', 'swagger_server/__main__.py'],
+            ['Procfile'],
+            ['runtime.txt'],
+            ['.travis.yml'],
+            ['scripts/run.sh'],
+            ['scripts/git_push.sh'],
+            ['scripts/test.sh'],
+            ['scripts/run_tests.sh'],
+            ['scripts/run_unit_tests.sh'],
+            ['scripts/run_linting.sh']
+        ]
+        for file in files:
+            if len(file) > 1:
+                run(['cp', 'templates/'+file[0], target + file[1]])
+            else:
+                run(['cp', 'templates/'+file[0], target + file[0]])
 
         def ensure_line(filename, test):
             with open(filename) as inp:

@@ -54,7 +54,7 @@ yaml_tool (repo) route
 When you come to test your code locally, move to your repo and use the;
 
 ```bash
-./run.sh
+./scripts/run.sh
 ```
 
 Shell script. This will (if necessary) create a virtual environment (virtenv) and all the depencies listed in your **requirements.txt** file. The "main" file that's executed is **__main__.py**, this will be overwritten by the code generator so avoid modifying this. If you need modifications, refer to the 'templates' folder in this repo which is used to tweak the code generator's results.
@@ -64,7 +64,7 @@ Shell script. This will (if necessary) create a virtual environment (virtenv) an
 When you have an initial repository ready to go, create a new repository on GitHub then run;
 
 ```bash
-./git_push.sh ONSdigital (repo) "Initial commit"
+./scripts/git_push.sh ONSdigital (repo) "Initial commit"
 ```
 
 ## Examples

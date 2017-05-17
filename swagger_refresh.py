@@ -97,6 +97,16 @@ with open('packages.txt') as packages:
             else:
                 run(['cp', 'templates/'+file[0], target + file[0]])
 
+        with open('templates/scripts/cckeys.json') as cc:
+            keys = loads(cc.read())
+            if rep in keys:
+                fname = '../ras-repos/{}/.travis.yml'.format(rep)
+                with open(fname, 'a') as kk:
+                    kk.write('env:\n')
+                    kk.write('  - secure: ')
+                    kk.write(keys[rep])
+                    kk.write('\n')
+
         def ensure_line(filename, test):
             with open(filename) as inp:
                 text = inp.read()
@@ -110,6 +120,7 @@ with open('packages.txt') as packages:
                 if not line:
                     break
                 ensure_line('../ras-repos/{}/requirements.txt'.format(rep), line)
+
 
         print('* Running YAML router for "{}"'.format(rep))
         api = YAML_API()

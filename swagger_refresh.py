@@ -84,6 +84,8 @@ with open('packages.txt') as packages:
             ['Procfile'],
             ['runtime.txt'],
             ['.travis.yml'],
+            ['requirements_for_test.txt'],
+            ['requirements.txt'],
             ['scripts/run.sh'],
             ['scripts/git_push.sh'],
             ['scripts/test.sh'],
@@ -107,19 +109,19 @@ with open('packages.txt') as packages:
                     kk.write(keys[rep])
                     kk.write('\n')
 
-        def ensure_line(filename, test):
-            with open(filename) as inp:
-                text = inp.read()
-            if test not in text:
-                with open(filename, 'a') as out:
-                    out.write(test)
+        #def ensure_line(filename, test):
+        #    with open(filename) as inp:
+        #        text = inp.read()
+        #    if test not in text:
+        #        with open(filename, 'a') as out:
+        #            out.write(test)
 
-        with open('templates/requirements.txt') as io:
-            while True:
-                line = io.readline()
-                if not line:
-                    break
-                ensure_line('../ras-repos/{}/requirements.txt'.format(rep), line)
+        #with open('templates/requirements.txt') as io:
+        #    while True:
+        #        line = io.readline()
+        #        if not line:
+        #            break
+        #        ensure_line('../ras-repos/{}/requirements.txt'.format(rep), line)
 
 
         print('* Running YAML router for "{}"'.format(rep))

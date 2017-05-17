@@ -67,6 +67,15 @@ When you have an initial repository ready to go, create a new repository on GitH
 ./scripts/git_push.sh ONSdigital (repo) "Initial commit"
 ```
 
+### CodeCov
+
+In order to get Travis working with CodeCov, you will need to edit templates/scripts/cckeys.json and add a key
+for your repo. The format is {'<repo name>': '<secret'} where the secret can be obtained by running;
+
+```bash
+travis encrypt CODECOV_TOKEN="...." -r ONSdigital/<repo name>
+```
+
 ## Examples
 
 ##### See what's been implemented so far ...

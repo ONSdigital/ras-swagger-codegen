@@ -66,7 +66,6 @@ with open('packages.txt') as packages:
         print('@ Running code generator for "{}"'.format(api))
         run(['rm', '-rf', '../ras-repos/{}/swagger_server/test'.format(rep)])
         run(['rm', '-rf',  '../ras-repos/{}/swagger_server/controllers'.format(rep)])
-        run(['rm', '../ras-repos/{}/git_push.sh'.format(rep)])
         status = run([
             "java", "-jar", "/usr/local/bin/swagger-codegen-cli.jar", "generate",
             "-i", "apis/config.json",
@@ -77,7 +76,9 @@ with open('packages.txt') as packages:
             print('%% code generation FAILED!')
             exit(status.returncode)
 
+        run(['rm', '../ras-repos/{}/git_push.sh'.format(rep)])
         target = '../ras-repos/{}/'.format(rep)
+        makedirs(target+'scripts', exist_ok=True)
         files = [
             ['__main__.py', 'swagger_server/__main__.py'],
             ['Procfile'],

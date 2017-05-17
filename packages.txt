@@ -2,3 +2,5 @@
 # party-api 1.0.1 ras-party-demo sdcplatform localhost
 # collection-instruments 1.0.0 ras-collection-instruments-demo oddjobz localhost
 collection-instrument-api 1.0.2 ras-collection-instrument-demo oddjobz localhost:8080
+collection-exercise-api 1.0.0 ras-collection-exercise-demo oddjobz localhost:8081
+demo-api 1.0.0 demo-api garethbult localhost:8082

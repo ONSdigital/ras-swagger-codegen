@@ -186,7 +186,6 @@ if __name__ == '__main__':
 
     config = configparser.ConfigParser()
     config.read('config.ini')
-    repo_path = config.get('CodeGen', 'repo_path', fallback="../ras-repos")
 
     api = YAML_API(config)
     api.open(argv[1])

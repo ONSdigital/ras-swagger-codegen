@@ -15,7 +15,6 @@ jsonschema==2.6.0
 MarkupSafe==1.0
 observable==0.3.2
 packaging==16.8
-pkg-resources==0.0.0
 psycopg2==2.7.1
 py==1.4.33
 pycrypto==2.6.1
@@ -33,4 +32,3 @@ swagger-spec-validator==2.1.0
 Twisted==16.6.0
 Werkzeug==0.12.1
 zope.interface==4.4.0
-

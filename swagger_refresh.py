@@ -79,6 +79,8 @@ with open('packages.txt') as packages:
         run(['rm', '../ras-repos/{}/git_push.sh'.format(rep)])
         target = '../ras-repos/{}/'.format(rep)
         makedirs(target+'scripts', exist_ok=True)
+        makedirs(target+'swagger_server/test_local', exist_ok=True)
+        makedirs(target+'swagger_server/controllers_local', exist_ok=True)
         files = [
             ['__main__.py', 'swagger_server/__main__.py'],
             ['Procfile'],
@@ -86,6 +88,11 @@ with open('packages.txt') as packages:
             ['.travis.yml'],
             ['requirements_for_test.txt'],
             ['requirements.txt'],
+            ['config.ini'],
+            ['configuration.py', 'swagger_server/configuration.py'],
+            ['encryption.py', 'swagger_server/controllers_local/encryption.py'],
+            ['test/__init__.py', 'swagger_server/test/__init__.py'],
+            ['test/__init__.py', 'swagger_server/test_local/__init__.py'],
             ['scripts/run.sh'],
             ['scripts/git_push.sh'],
             ['scripts/test.sh'],
@@ -109,6 +116,13 @@ with open('packages.txt') as packages:
                     kk.write(keys[rep])
                     kk.write('\n')
 
+        print('* Running YAML router for "{}"'.format(rep))
+        api = YAML_API()
+        api.open(rep)
+        api.load_tags()
+        api.load_controllers()
+        api.route()
+
         #def ensure_line(filename, test):
         #    with open(filename) as inp:
         #        text = inp.read()
@@ -122,11 +136,3 @@ with open('packages.txt') as packages:
         #        if not line:
         #            break
         #        ensure_line('../ras-repos/{}/requirements.txt'.format(rep), line)
-
-
-        print('* Running YAML router for "{}"'.format(rep))
-        api = YAML_API()
-        api.open(rep)
-        api.load_tags()
-        api.load_controllers()
-        api.route()

@@ -205,6 +205,7 @@ if __name__ == '__main__':
 
     if argv[2] == 'implement':
         api.implement(argv[3])
+        api.route()
         exit(0)
 
     usage('unrecognised option')

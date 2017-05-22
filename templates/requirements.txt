@@ -3,10 +3,8 @@ click==6.7
 clickclick==1.2.1
 connexion==1.0.129
 constantly==15.1.0
-coverage==4.4
 Flask==0.12.1
 Flask-Cors==3.0.2
-Flask-Testing==0.6.2
 Flask-Twisted==0.1.2
 incremental==16.10.1
 itsdangerous==0.24

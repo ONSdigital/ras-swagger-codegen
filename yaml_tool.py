@@ -6,9 +6,10 @@ import yaml
 from pathlib import Path
 
 
-LOCAL = '../ras-repos/{}/swagger_server/controllers_local/{}_controller.py'
-GENERIC = '../ras-repos/{}/swagger_server/controllers/{}_controller.py'
-YAML_FILE = '../ras-repos/{}/swagger_server/swagger/swagger.yaml'
+LOCAL = '{}/{}/swagger_server/controllers_local/{}_controller.py'
+GENERIC = '{}/{}/swagger_server/controllers/{}_controller.py'
+YAML_FILE = '{}/{}/swagger_server/swagger/swagger.yaml'
+
 
 def usage(msg):
     print('%% ', msg)
@@ -22,19 +23,20 @@ def usage(msg):
 
 class YAML_API(object):
 
-    def __init__(self):
+    def __init__(self, user_config):
         self.tags = {}
         self.controllers = {}
         self.conf = None
         self.repo = None
+        self.repo_path = user_config.get('CodeGen', 'repo_path', fallback='../ras-repos')
 
     def open(self, name):
 
         for folder in ['controllers_local', 'test_local']:
-            pathname = '../ras-repos/{}/swagger_server/{}'.format(name, folder)
+            pathname = '{}/{}/swagger_server/{}'.format(self.repo_path, name, folder)
             makedirs(pathname, exist_ok=True)
 
-        pathname = YAML_FILE.format(name)
+        pathname = YAML_FILE.format(self.repo_path, name)
         if not Path(pathname).is_file:
             print('%% unable to locate "{}"'.format(pathname))
             exit(1)
@@ -43,7 +45,7 @@ class YAML_API(object):
         self.repo = name
 
     def save(self):
-        file_name = YAML_FILE.format(self.repo)
+        file_name = YAML_FILE.format(self.repo_path, self.repo)
         rename(file_name, file_name+'.orig')
         with open(file_name, 'w') as io:
             io.write(yaml.dump(self.conf))
@@ -69,7 +71,7 @@ class YAML_API(object):
         succ = 0
         fail = []
         for controller in self.controllers:
-            pathname = GENERIC.format(self.repo, controller)
+            pathname = GENERIC.format(self.repo_path, self.repo, controller)
             with open(pathname) as io:
                 text = io.read()
                 for fn, pth, _, _ in self.controllers[controller]:
@@ -87,7 +89,7 @@ class YAML_API(object):
         implemented = []
         count = 0
         for controller in self.controllers:
-            pathname = LOCAL.format(self.repo, controller)
+            pathname = LOCAL.format(self.repo_path, self.repo, controller)
             if Path(pathname).is_file():
                 with open(pathname) as io:
                     text = io.read()
@@ -106,14 +108,14 @@ class YAML_API(object):
 
     def implement(self, target):
         for controller in self.controllers:
-            pathname = GENERIC.format(self.repo, controller)
+            pathname = GENERIC.format(self.repo_path, self.repo, controller)
             if Path(pathname).is_file():
                 with open(pathname) as io:
                     text = io.read()
                     for fn, pth, _, _ in self.controllers[controller]:
                         if target == fn:
                             try:
-                                pathname = LOCAL.format(self.repo, controller)
+                                pathname = LOCAL.format(self.repo_path, self.repo, controller)
                                 with open(pathname) as dst:
                                     code = dst.read()
                                 if ('\ndef ' + fn + '(') in code:
@@ -127,7 +129,7 @@ class YAML_API(object):
                             except ValueError:
                                 end = len(text)
                             snippet = text[beg:end-1]
-                            pathname = LOCAL.format(self.repo, controller)
+                            pathname = LOCAL.format(self.repo_path, self.repo, controller)
                             with open(pathname, 'a') as dst:
                                 dst.write('\n#\n# {}\n#\n'.format(pth))
                                 dst.write(snippet)
@@ -139,7 +141,7 @@ class YAML_API(object):
         unimplemented = []
         count = 0
         for controller in self.controllers:
-            pathname = LOCAL.format(self.repo, controller)
+            pathname = LOCAL.format(self.repo_path, self.repo, controller)
             if Path(pathname).is_file():
                 with open(pathname) as io:
                     text = io.read()
@@ -164,7 +166,7 @@ class YAML_API(object):
 
     def route(self):
         for controller in self.controllers:
-            pathname = LOCAL.format(self.repo, controller)
+            pathname = LOCAL.format(self.repo_path, self.repo, controller)
             if Path(pathname).is_file():
                 with open(pathname) as io:
                     text = io.read()
@@ -175,11 +177,17 @@ class YAML_API(object):
                 self.update_route(pth, method, tag, state)
         self.save()
 
+
 if __name__ == '__main__':
     if len(argv) < 2:
         usage('insufficient parameters')
 
-    api = YAML_API()
+    import configparser
+
+    config = configparser.ConfigParser()
+    config.read('config.ini')
+
+    api = YAML_API(config)
     api.open(argv[1])
     api.load_tags()
     api.load_controllers()

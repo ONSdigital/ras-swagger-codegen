@@ -213,7 +213,7 @@ if __name__ == '__main__':
 
     if argv[2] == 'implement':
         api.implement(argv[3])
-        api = YAML_API()
+        api = YAML_API(config)
         api.open(argv[1])
         api.load_tags()
         api.load_controllers()

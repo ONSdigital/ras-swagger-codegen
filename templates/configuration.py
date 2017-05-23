@@ -71,6 +71,7 @@ class ONSEnvironment(object):
             create_database(self._engine.url)
         if self.if_drop_database:
             self._base.metadata.drop_all(self._engine)
+        from .models_local import _models
         self._base.metadata.create_all(self._engine)
 
     def _activate_cf(self):

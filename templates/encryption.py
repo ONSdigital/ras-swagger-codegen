@@ -38,7 +38,9 @@ class ONSCryptographer:
         :param data: The data were trying to encrypt 
         :return: The data padded out to our given block size
         """
-        return data + (self.bs - len(data) % self.bs) * chr(self.bs - len(data) % self.bs)
+        vector = AES.block_size - len(data) % AES.block_size
+        return data + ((bytes([vector])) * vector)
+        # return data + (self.bs - len(data) % self.bs) * chr(self.bs - len(data) % self.bs
 
     def unpad(self, data):
         """
@@ -56,7 +58,7 @@ class ONSCryptographer:
         :param raw_text: The data to encrypt, must be a string of type byte 
         :return: The encrypted text
         """
-        raw_text = self.pad(raw_text.decode())
+        raw_text = self.pad(raw_text)
         init_vector = Random.new().read(AES.block_size)
         ons_cipher = AES.new(self.key, AES.MODE_CBC, init_vector)
         return b64encode(init_vector + ons_cipher.encrypt(raw_text))

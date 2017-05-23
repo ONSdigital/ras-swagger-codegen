@@ -1,16 +1,24 @@
 #!/usr/bin/python3
 
-from urllib.request import urlopen
-from pathlib import Path
+import configparser
 from filecmp import cmp
 from json import loads, dumps
 from os import rename, makedirs
-from shutil import copy
-from sys import argv
+from pathlib import Path
 from subprocess import run, PIPE
+from sys import argv
+from urllib.request import urlopen
+
 from yaml_tool import YAML_API
 
 force = '-f' in argv
+
+
+config = configparser.ConfigParser()
+config.read('config.ini')
+repo_path = config.get('CodeGen', 'repo_path', fallback="../ras-repos")
+generator_command = config.get('CodeGen', 'generator_command',
+                               fallback="java -jar /usr/local/bin/swagger-codegen-cli.jar")
 
 with open('packages.txt') as packages:
     while True:
@@ -64,20 +72,21 @@ with open('packages.txt') as packages:
             io.write(dumps(buffer))
 
         print('@ Running code generator for "{}"'.format(api))
-        run(['rm', '-rf', '../ras-repos/{}/swagger_server/test'.format(rep)])
-        run(['rm', '-rf',  '../ras-repos/{}/swagger_server/controllers'.format(rep)])
-        status = run([
-            "java", "-jar", "/usr/local/bin/swagger-codegen-cli.jar", "generate",
+        run(['rm', '-rf', '{}/{}/swagger_server/test'.format(repo_path, rep)])
+        run(['rm', '-rf',  '{}/{}/swagger_server/controllers'.format(repo_path, rep)])
+
+        status = run(generator_command.split() + [
+            "generate",
             "-i", "apis/config.json",
             "-l", "python-flask",
-            "-o../ras-repos/{}".format(rep)
+            "-o{}/{}".format(repo_path, rep)
         ], stdout=PIPE)
         if status.returncode:
             print('%% code generation FAILED!')
             exit(status.returncode)
 
-        run(['rm', '../ras-repos/{}/git_push.sh'.format(rep)])
-        target = '../ras-repos/{}/'.format(rep)
+        run(['rm', '{}/{}/git_push.sh'.format(repo_path, rep)])
+        target = '{}/{}/'.format(repo_path, rep)
         makedirs(target+'scripts', exist_ok=True)
         makedirs(target+'swagger_server/test_local', exist_ok=True)
         makedirs(target+'swagger_server/controllers_local', exist_ok=True)
@@ -109,7 +118,7 @@ with open('packages.txt') as packages:
         with open('templates/scripts/cckeys.json') as cc:
             keys = loads(cc.read())
             if rep in keys:
-                fname = '../ras-repos/{}/.travis.yml'.format(rep)
+                fname = '{}/{}/.travis.yml'.format(repo_path, rep)
                 with open(fname, 'a') as kk:
                     kk.write('env:\n')
                     kk.write('  - secure: ')
@@ -117,7 +126,7 @@ with open('packages.txt') as packages:
                     kk.write('\n')
 
         print('* Running YAML router for "{}"'.format(rep))
-        api = YAML_API()
+        api = YAML_API(config)
         api.open(rep)
         api.load_tags()
         api.load_controllers()
@@ -135,4 +144,4 @@ with open('packages.txt') as packages:
         #        line = io.readline()
         #        if not line:
         #            break
-        #        ensure_line('../ras-repos/{}/requirements.txt'.format(rep), line)
+        #        ensure_line('{}/{}/requirements.txt'.format(repo_path, rep), line)

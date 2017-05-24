@@ -98,16 +98,17 @@ class ONSEnvironment(object):
         Connect to the database (create it if it's missing) and set up tables as per our models.
         If we're in a 'test' environment, drop all the tables first ...
         """
-        self.logger.info("Connecting to '{}'".format(self.get('db_connection')))
-        self._engine = create_engine(self.get('db_connection'), convert_unicode=True)
-        self._session.remove()
-        self._session.configure(bind=self._engine, autoflush=False, autocommit=False, expire_on_commit=False)
-        if not database_exists(self._engine.url):
-            create_database(self._engine.url)
-        if self.if_drop_database:
-            self._base.metadata.drop_all(self._engine)
-        from .models_local import _models
-        self._base.metadata.create_all(self._engine)
+        if self.get('db_name') is not None:
+            self.logger.info("Connecting to '{}'".format(self.get('db_connection')))
+            self._engine = create_engine(self.get('db_connection'), convert_unicode=True)
+            self._session.remove()
+            self._session.configure(bind=self._engine, autoflush=False, autocommit=False, expire_on_commit=False)
+            if not database_exists(self._engine.url):
+                create_database(self._engine.url)
+            if self.if_drop_database:
+                self._base.metadata.drop_all(self._engine)
+            from .models_local import _models
+            self._base.metadata.create_all(self._engine)
 
     def _activate_cf(self):
         """

@@ -95,7 +95,7 @@ with open('packages.txt') as packages:
             ['Procfile'],
             ['runtime.txt'],
             ['.travis.yml'],
-            ['requirements_for_test.txt'],
+            ['test-requirements.txt'],
             ['requirements.txt'],
             ['config.ini'],
             ['configuration.py', 'swagger_server/configuration.py'],
@@ -108,7 +108,8 @@ with open('packages.txt') as packages:
             ['scripts/test.sh'],
             ['scripts/run_tests.sh'],
             ['scripts/run_unit_tests.sh'],
-            ['scripts/run_linting.sh']
+            ['scripts/run_linting.sh'],
+            ['tox.ini'],
         ]
         for file in files:
             if len(file) > 1:

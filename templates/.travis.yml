@@ -1,8 +1,8 @@
 language: python
 python:
-  - "3.5"
+  - "3.6"
 install:
-  - pip install -r requirements_for_test.txt
+  - pip install -r test-requirements.txt
 script:
   - ONS_ENV=test pytest --cov=swagger_server/controllers_local
 after_success:

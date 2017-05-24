@@ -22,6 +22,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy_utils import database_exists, create_database
 
+from swagger_server import ons_logger
 from .controllers_local.encryption import ONSCryptographer
 
 
@@ -52,6 +53,7 @@ class ONSEnvironment(object):
         self._config._interpolation = ExtendedInterpolation()
         self._config.read('config.ini')
         self._env = getenv('ONS_ENV', 'development')
+        self._parse_manifest()
         self._session = scoped_session(sessionmaker())
         self._base = declarative_base()
         #
@@ -66,6 +68,22 @@ class ONSEnvironment(object):
                 DDL('CREATE SCHEMA IF NOT EXISTS {}'.format(schema)).execute_if(dialect='postgresql')
             )
         self._engine = None
+        self.logger = ons_logger.create(self)
+
+    def _parse_manifest(self):
+        """
+        Attempt to read the CloudFoundry manifest. If present, assume the manifest defines just one application,
+        which is this service, and return that section as the service metadata.
+
+        :return: a dictionary containing the manifest application section if found, else an empty dictionary
+        """
+        try:
+            with open('manifest.yml') as stream:
+                manifest = load(stream)
+                this_app = manifest['applications'][0]
+                self.set('name', this_app['name'])
+        except FileNotFoundError:
+            return {}
 
     def activate(self):
         """
@@ -80,6 +98,7 @@ class ONSEnvironment(object):
         Connect to the database (create it if it's missing) and set up tables as per our models.
         If we're in a 'test' environment, drop all the tables first ...
         """
+        self.logger.info("Connecting to '{}'".format(self.get('db_connection')))
         self._engine = create_engine(self.get('db_connection'), convert_unicode=True)
         self._session.remove()
         self._session.configure(bind=self._engine, autoflush=False, autocommit=False, expire_on_commit=False)
@@ -164,3 +183,4 @@ class ONSEnvironment(object):
 
 
 ons_env = ONSEnvironment()
+logger = ons_env.logger

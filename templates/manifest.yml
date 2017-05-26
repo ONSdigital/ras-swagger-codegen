@@ -1,0 +1,8 @@
+---
+applications:
+- name: {{repo}}-dev
+  memory: 512M
+  host: {{repo}}-dev
+  services:
+    - cidsvc-pg-db
+

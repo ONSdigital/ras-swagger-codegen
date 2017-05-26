@@ -8,9 +8,10 @@ from pathlib import Path
 from subprocess import run, PIPE
 from sys import argv
 from urllib.request import urlopen
-
+from jinja2 import Template, Environment, FileSystemLoader
 from yaml_tool import YAML_API
 
+env = Environment(loader=FileSystemLoader('./templates'))
 force = '-f' in argv
 
 
@@ -126,6 +127,11 @@ with open('packages.txt') as packages:
                     kk.write('  - secure: ')
                     kk.write(keys[rep])
                     kk.write('\n')
+
+        tpl = env.get_template('manifest.yml')
+        with open("{}/manifest.yml".format(target), "w") as io:
+            io.write(tpl.render({'repo': rep}))
+            io.write('\n')
 
         print('* Running YAML router for "{}"'.format(rep))
         api = YAML_API(config)

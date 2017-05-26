@@ -76,6 +76,13 @@ for your repo. The format is {'<repo name>': '<secret'} where the secret can be 
 travis encrypt CODECOV_TOKEN="...." -r ONSdigital/<repo name>
 ```
 
+If you don't have 'travis', it's available via 'gem'. (it's ruby package)
+On Ubuntu;
+```bash
+apt install ruby ruby-dev
+gem install travis
+```
+
 ## Examples
 
 ##### See what's been implemented so far ...

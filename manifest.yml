@@ -1,0 +1,7 @@
+---
+applications:
+- name: generated-app
+  memory: 128M
+  host: generated-app
+  services:
+  - demo-db

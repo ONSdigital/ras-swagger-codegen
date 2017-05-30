@@ -75,6 +75,7 @@ with open('packages.txt') as packages:
         print('@ Running code generator for "{}"'.format(api))
         run(['rm', '-rf', '{}/{}/swagger_server/test'.format(repo_path, rep)])
         run(['rm', '-rf',  '{}/{}/swagger_server/controllers'.format(repo_path, rep)])
+        run(['rm', '-f',  '{}/{}/tox.ini'.format(repo_path, rep)])
 
         status = run(generator_command.split() + [
             "generate",

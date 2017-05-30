@@ -100,6 +100,7 @@ with open('packages.txt') as packages:
             ['requirements.txt'],
             ['config.ini'],
             ['configuration.py', 'swagger_server/configuration.py'],
+            ['ons_jwt.py', 'swagger_server/ons_jwt.py'],
             ['encryption.py', 'swagger_server/controllers_local/encryption.py'],
             ['ons_logger.py', 'swagger_server/ons_logger.py'],
             ['test/__init__.py', 'swagger_server/test/__init__.py'],

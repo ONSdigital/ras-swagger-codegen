@@ -92,6 +92,7 @@ with open('packages.txt') as packages:
         makedirs(target+'scripts', exist_ok=True)
         makedirs(target+'swagger_server/test_local', exist_ok=True)
         makedirs(target+'swagger_server/controllers_local', exist_ok=True)
+        makedirs(target+'swagger_server/models_local', exist_ok=True)
         files = [
             ['__main__.py', 'swagger_server/__main__.py'],
             ['Procfile'],
@@ -100,7 +101,11 @@ with open('packages.txt') as packages:
             ['test-requirements.txt'],
             ['requirements.txt'],
             ['config.ini'],
+            ['base.py', 'swagger_server/models_local/base.py'],
             ['configuration.py', 'swagger_server/configuration.py'],
+            ['database.py', 'swagger_server/database.py'],
+            ['guid.py', 'swagger_server/models_local/guid.py'],
+            ['model.py', 'swagger_server/models_local/model_example.py'],
             ['ons_jwt.py', 'swagger_server/ons_jwt.py'],
             ['encryption.py', 'swagger_server/controllers_local/encryption.py'],
             ['ons_logger.py', 'swagger_server/ons_logger.py'],

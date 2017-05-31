@@ -127,6 +127,7 @@ $ ./yaml_tool.py ras-collection-instrument-demo route
 In the generated code;
 
 * swagger_server/controllers_local - your code goes here
+* swagger_server/models_local - database models go in here (see below)
 * swagger_server/tests_local - your tests go here
 
 In swagger-codegen;
@@ -136,3 +137,10 @@ In swagger-codegen;
 To Force a rebuild on all your repo's, remove the contents of the /apis folder.
 
 ..
+##### Specifying database models
+
+Database models should be added to swagger_server/models_local. These can be structured however you choose,
+albeit with the following two constraints:
+
+* All model classes must inherit from the Base class in swagger_server/models_local/base.py. This enables the DB creation script to 'inject' a postgres schema by directly manipulating the metadata of the common Base.
+* All models should be aliased in the module swagger_server/models_local/_model.py, which is imported by the DB creation script. 

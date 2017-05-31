@@ -152,6 +152,14 @@ class ONSEnvironment(object):
         return drop.lower() in ['yes', 'true']
 
     @property
+    def is_secure(self):
+        return self.get('authentication', 'true').lower() in ['yes', 'true']
+
+    @property
+    def base(self):
+        return self._base
+
+    @property
     def session(self):
         return self._session
 

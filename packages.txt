@@ -2,4 +2,4 @@
 collection-instrument-api 1.0.2 ras-collection-instrument oddjobz localhost:8080
 collection-exercise-api 1.0.0 ras-collection-exercise-demo oddjobz localhost:8081
 demo-api 1.0.0 demo-api garethbult localhost:8082
-party-api 1.0.0 ras-party-v2 jonmorphic localhost:8083
+party-api 1.0.4 ras-party-v2 sdcplatform localhost:8083

@@ -105,7 +105,7 @@ with open('packages.txt') as packages:
             ['configuration.py', 'swagger_server/configuration.py'],
             ['database.py', 'swagger_server/database.py'],
             ['guid.py', 'swagger_server/models_local/guid.py'],
-            ['model.py', 'swagger_server/models_local/model_example.py'],
+            ['model_example.py', 'swagger_server/models_local/model_example.py'],
             ['ons_jwt.py', 'swagger_server/controllers_local/ons_jwt.py'],
             ['encryption.py', 'swagger_server/controllers_local/encryption.py'],
             ['ons_logger.py', 'swagger_server/ons_logger.py'],

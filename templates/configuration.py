@@ -1,14 +1,8 @@
 ##############################################################################
 #                                                                            #
 #   Generic Configuration tool for Micro-Service environment discovery       #
-#   Date:    20 May 2017                                                     #
-#   Author:  Gareth Bult                                                     #
 #   License: MIT                                                             #
 #   Copyright (c) 2017 Crown Copyright (Office for National Statistics)      #
-#                                                                            #
-#   Initial peer review:                                                     #
-#                                                                            #
-#   Revision    Date    Reason                                               #
 #                                                                            #
 ##############################################################################
 from configparser import ConfigParser, ExtendedInterpolation

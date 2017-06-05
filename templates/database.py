@@ -1,6 +1,7 @@
 import argparse
 from configparser import ConfigParser, ExtendedInterpolation
 from sqlalchemy import create_engine
+import sqlalchemy_utils as util
 from swagger_server import ons_logger
 
 
@@ -12,7 +13,7 @@ def drop(config, engine, logger):
     # fix-up the postgres schema:
     Base.metadata.schema = db_schema if db_connection.startswith('postgres') else None
 
-    from swagger_server.models_local import _model
+    from swagger_server.models_local import _models
 
     logger.info("Dropping database tables.")
     if db_connection.startswith('postgres'):
@@ -30,11 +31,19 @@ def create(config, engine, logger):
     # fix-up the postgres schema:
     Base.metadata.schema = db_schema if db_connection.startswith('postgres') else None
 
-    from swagger_server.models_local import model
+    from swagger_server.models_local import _models
 
-    logger.info("Creating database with uri '{}'".format(db_connection))
+    if config.do_create_database:
+        logger.info("Checking if database already exists.")
+        if util.database_exists(db_connection):
+            logger.info("Database exists, skipping creation")
+        else:
+            util.create_database(db_connection)
+            logger.info("Created new database at '{}'".format(db_connection))
+
+    logger.info("Creating database model at uri '{}'".format(db_connection))
     if db_connection.startswith('postgres'):
-        logger.info("Creating schema {}.".format(db_schema))
+        logger.info("Database type is postgres. Creating schema {}.".format(db_schema))
         engine.execute("CREATE SCHEMA IF NOT EXISTS {}".format(db_schema))
     logger.info("Creating database tables.")
     Base.metadata.create_all(engine)
